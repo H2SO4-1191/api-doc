@@ -7,10 +7,11 @@ A small tool to simplify documenting APIs in order to make communication between
 - Use of JSON files to document an API
 - The doc loader can render any API doc as long as it follows the template's JSON structure
 - Multiple API docs as JSON files and one doc loader which makes scaling API documentation easier
-- Simple, smooth, and visually appealing UI.
-- Easy to use, just have the JSON file and load it.
+- Simple, smooth, and visually appealing UI
+- Easy to use, just have the JSON file and load it
 - Drop down style for API endpoints to make navigation and reading effortless
-- Search API endpoints by title, URL, or name to make finding what you want easy once the API scales big.
+- Drop down style for notes regarding things that other devs need to know
+- Search API endpoints by title, URL, or name to make finding what you want easy once the API scales big
 
 ## Tech Stack
 
@@ -32,6 +33,7 @@ A small tool to simplify documenting APIs in order to make communication between
 
 <p align="center">
   <img src="screenshots/home.jpeg" width="45%" />
+  <img src="screenshots/notes.png" width="45%" />
 </p>
 
 <p align="center">

@@ -4,32 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>API Documentation Template</title>
-    <link
-      rel="icon"
-      type="image/png"
-      href="https://avatars.githubusercontent.com/u/160245889?v=4&size=64"
-    />
+    <link rel="icon" type="image/png" href="https://avatars.githubusercontent.com/u/160245889?v=4&size=64" />
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
 
       body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-          Cantarell, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         line-height: 1.6;
         color: #e2e8f0;
         background: #0f172a;
       }
 
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
+      .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 
       header {
         background: linear-gradient(135deg, #4c1d95 0%, #581c87 100%);
@@ -37,23 +23,122 @@
         padding: 40px 20px;
         margin-bottom: 30px;
         border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
       }
 
-      header h1 {
-        font-size: 2.5em;
-        margin-bottom: 10px;
+      header h1 { font-size: 2.5em; margin-bottom: 10px; }
+      header p { font-size: 1.1em; opacity: 0.9; }
+
+      /* ── NOTES ── */
+      #notesSection { margin-bottom: 30px; }
+
+      .notes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 16px;
       }
 
-      header p {
-        font-size: 1.1em;
-        opacity: 0.9;
+      .note-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
       }
 
-      .search-box {
-        margin-bottom: 30px;
+      .note-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 18px;
+        background: #0f172a;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.2s;
         position: relative;
       }
+
+      .note-card-header:hover { background: #1a2540; }
+
+      .note-card-header::after {
+        content: "▼";
+        position: absolute;
+        right: 16px;
+        font-size: 0.75em;
+        color: #8b5cf6;
+        transition: transform 0.3s;
+      }
+
+      .note-card.active .note-card-header::after { transform: rotate(-180deg); }
+
+      .note-icon {
+        font-size: 1.1em;
+        width: 28px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .note-card-title {
+        font-size: 0.9em;
+        font-weight: 600;
+        color: #a5b4fc;
+        text-transform: capitalize;
+        letter-spacing: 0.3px;
+      }
+
+      .note-card-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+
+      .note-card.active .note-card-body {
+        max-height: 1000px;
+        transition: max-height 0.5s ease-in;
+      }
+
+      .note-card-body-inner { padding: 16px 18px; }
+
+      /* plain string note */
+      .note-text { color: #cbd5e1; font-size: 0.9em; line-height: 1.7; }
+
+      /* object note — key/value table */
+      .note-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+      .note-table tr { border-bottom: 1px solid #334155; }
+      .note-table tr:last-child { border-bottom: none; }
+      .note-table td { padding: 8px 10px; vertical-align: top; }
+      .note-table td:first-child {
+        color: #a5b4fc;
+        font-weight: 600;
+        white-space: nowrap;
+        padding-right: 14px;
+        width: 1%;
+      }
+      .note-table td:last-child { color: #cbd5e1; }
+
+      .notes-section-label {
+        font-size: 1em;
+        font-weight: 700;
+        color: #8b5cf6;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .notes-section-label::before {
+        content: "";
+        width: 4px;
+        height: 18px;
+        background: #8b5cf6;
+        border-radius: 2px;
+        display: inline-block;
+      }
+
+      /* ── SEARCH ── */
+      .search-box { margin-bottom: 30px; position: relative; }
 
       .search-box input {
         width: 100%;
@@ -67,29 +152,21 @@
         color: #e2e8f0;
       }
 
-      .search-box input:focus {
-        border-color: #8b5cf6;
-      }
+      .search-box input:focus { border-color: #8b5cf6; }
+      .search-box input::placeholder { color: #64748b; }
 
-      .search-box input::placeholder {
-        color: #64748b;
-      }
-
+      /* ── ENDPOINTS ── */
       .endpoint {
         background: #1e293b;
         border-radius: 8px;
         margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
         overflow: hidden;
         border: 1px solid #334155;
       }
 
-      .endpoint:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-      }
+      .endpoint:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 
       .endpoint-header {
         display: flex;
@@ -103,9 +180,7 @@
         position: relative;
       }
 
-      .endpoint-header:hover {
-        background-color: #334155;
-      }
+      .endpoint-header:hover { background-color: #334155; }
 
       .endpoint-header::after {
         content: "▼";
@@ -116,9 +191,7 @@
         transition: transform 0.3s;
       }
 
-      .endpoint.active .endpoint-header::after {
-        transform: rotate(-180deg);
-      }
+      .endpoint.active .endpoint-header::after { transform: rotate(-180deg); }
 
       .endpoint-content {
         max-height: 0;
@@ -133,11 +206,7 @@
         transition: max-height 0.5s ease-in;
       }
 
-      .endpoint-title {
-        font-size: 1.5em;
-        font-weight: 600;
-        color: #f1f5f9;
-      }
+      .endpoint-title { font-size: 1.5em; font-weight: 600; color: #f1f5f9; }
 
       .method-badge {
         padding: 6px 12px;
@@ -148,26 +217,11 @@
         letter-spacing: 0.5px;
       }
 
-      .method-get {
-        background: #48bb78;
-        color: white;
-      }
-      .method-post {
-        background: #4299e1;
-        color: white;
-      }
-      .method-put {
-        background: #ed8936;
-        color: white;
-      }
-      .method-patch {
-        background: #9f7aea;
-        color: white;
-      }
-      .method-delete {
-        background: #f56565;
-        color: white;
-      }
+      .method-get    { background: #48bb78; color: white; }
+      .method-post   { background: #4299e1; color: white; }
+      .method-put    { background: #ed8936; color: white; }
+      .method-patch  { background: #9f7aea; color: white; }
+      .method-delete { background: #f56565; color: white; }
 
       .endpoint-url {
         background: #0f172a;
@@ -181,9 +235,7 @@
         word-break: break-all;
       }
 
-      .section {
-        margin-bottom: 20px;
-      }
+      .section { margin-bottom: 20px; }
 
       .section-title {
         font-size: 1.1em;
@@ -203,11 +255,7 @@
         border-radius: 2px;
       }
 
-      .permissions {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
+      .permissions { display: flex; gap: 8px; flex-wrap: wrap; }
 
       .permission-badge {
         background: #334155;
@@ -230,9 +278,7 @@
         border: 1px solid #334155;
       }
 
-      .response-section {
-        margin-top: 15px;
-      }
+      .response-section { margin-top: 15px; }
 
       .response-type {
         font-weight: 600;
@@ -242,15 +288,8 @@
         display: inline-block;
       }
 
-      .response-success {
-        background: #064e3b;
-        color: #6ee7b7;
-      }
-
-      .response-error {
-        background: #7f1d1d;
-        color: #fca5a5;
-      }
+      .response-success { background: #064e3b; color: #6ee7b7; }
+      .response-error   { background: #7f1d1d; color: #fca5a5; }
 
       .no-results {
         text-align: center;
@@ -275,24 +314,19 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.35);
       }
 
       .load-btn:hover {
         background: #6d28d9;
         transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.45);
       }
 
       @media (max-width: 768px) {
-        header h1 {
-          font-size: 1.8em;
-        }
-
-        .endpoint-header {
-          flex-direction: column;
-          align-items: flex-start;
-        }
+        header h1 { font-size: 1.8em; }
+        .endpoint-header { flex-direction: column; align-items: flex-start; }
+        .notes-grid { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -301,7 +335,7 @@
       <header>
         <h1>API Documentation Template</h1>
         <p>Complete reference for all available endpoints</p>
-        <p id="base_url" style="display: none; margin-top: 5px"></p>
+        <p id="base_url" style="display:none; margin-top:5px"></p>
       </header>
 
       <div class="file-loader">
@@ -309,16 +343,14 @@
         <button id="loadFileBtn" class="load-btn">Load API JSON</button>
       </div>
 
+      <div id="notesSection"></div>
+
       <div class="search-box">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Search endpoints by title, URL, or method..."
-        />
+        <input type="text" id="searchInput" placeholder="Search endpoints by title, URL, or method..." />
       </div>
 
       <div id="endpointsContainer"></div>
-      <div id="noResults" class="no-results" style="display: none">
+      <div id="noResults" class="no-results" style="display:none">
         No endpoints found matching your search.
       </div>
     </div>
@@ -327,44 +359,123 @@
       let endpoints = [];
       let fileLoaded = false;
 
-      class Endpoint {
-        constructor(data) {
-          this.data = data;
+      // ── NOTE ICONS ────────────────────────────────────────────────
+      const NOTE_ICONS = {
+        authentication: "🔐",
+        csrf:           "🛡️",
+        permission:     "🔑",
+        permissions:    "🔑",
+        user:           "👤",
+        users:          "👤",
+        pagination:     "📄",
+        image:          "🖼️",
+        images:         "🖼️",
+        rate:           "⏱️",
+        error:          "⚠️",
+        default:        "📝",
+      };
+
+      function noteIcon(key) {
+        const lower = key.toLowerCase();
+        for (const [k, icon] of Object.entries(NOTE_ICONS)) {
+          if (lower.includes(k)) return icon;
         }
+        return NOTE_ICONS.default;
+      }
+
+      function humanize(key) {
+        return key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      }
+
+      // ── RENDER NOTES ──────────────────────────────────────────────
+      function renderNotes(notes) {
+        const section = document.getElementById("notesSection");
+        section.innerHTML = "";
+
+        if (!notes || Object.keys(notes).length === 0) return;
+
+        const label = document.createElement("div");
+        label.className = "notes-section-label";
+        label.textContent = "Notes & Reference";
+        section.appendChild(label);
+
+        const grid = document.createElement("div");
+        grid.className = "notes-grid";
+
+        for (const [key, value] of Object.entries(notes)) {
+          const card = document.createElement("div");
+          card.className = "note-card";
+
+          const header = document.createElement("div");
+          header.className = "note-card-header";
+          header.innerHTML = `
+            <span class="note-icon">${noteIcon(key)}</span>
+            <span class="note-card-title">${humanize(key)}</span>
+          `;
+
+          const body = document.createElement("div");
+          body.className = "note-card-body";
+
+          const inner = document.createElement("div");
+          inner.className = "note-card-body-inner";
+
+          if (typeof value === "string") {
+            inner.innerHTML = `<p class="note-text">${value}</p>`;
+          } else if (typeof value === "object" && value !== null) {
+            const table = document.createElement("table");
+            table.className = "note-table";
+            for (const [k, v] of Object.entries(value)) {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `<td>${humanize(k)}</td><td>${v}</td>`;
+              table.appendChild(tr);
+            }
+            inner.appendChild(table);
+          }
+
+          body.appendChild(inner);
+          card.appendChild(header);
+          card.appendChild(body);
+
+          header.addEventListener("click", () => {
+            const isActive = card.classList.contains("active");
+            // collapse all, then open clicked (accordion)
+            document.querySelectorAll(".note-card").forEach(c => c.classList.remove("active"));
+            if (!isActive) card.classList.add("active");
+          });
+
+          grid.appendChild(card);
+        }
+
+        section.appendChild(grid);
+      }
+
+      // ── ENDPOINTS ─────────────────────────────────────────────────
+      class Endpoint {
+        constructor(data) { this.data = data; }
 
         render() {
           const endpoint = document.createElement("div");
           endpoint.className = "endpoint";
           endpoint.innerHTML = `
-                    <div class="endpoint-header">
-                        <h2 class="endpoint-title">${this.data.title}</h2>
-                        <span class="method-badge method-${this.data.method.toLowerCase()}">${this.data.method}</span>
-                    </div>
-                    
-                    <div class="endpoint-content">
-                        <div class="endpoint-url">${this.data.url}</div>
-                        
-                        ${this.data.description ? `<p style="margin-bottom: 20px; color: #cbd5e1;">${this.data.description}</p>` : ""}
-                        
-                        <div class="section">
-                            <div class="section-title">Permissions Required</div>
-                            <div class="permissions">
-                                ${this.data.permissions
-                                  .map(
-                                    (perm) =>
-                                      `<span class="permission-badge">${perm}</span>`,
-                                  )
-                                  .join("")}
-                            </div>
-                        </div>
-                        
-                        ${this.renderRequestBody()}
-                        ${this.renderResponses()}
-                    </div>
-                `;
+            <div class="endpoint-header">
+              <h2 class="endpoint-title">${this.data.title}</h2>
+              <span class="method-badge method-${this.data.method.toLowerCase()}">${this.data.method}</span>
+            </div>
+            <div class="endpoint-content">
+              <div class="endpoint-url">${this.data.url}</div>
+              ${this.data.description ? `<p style="margin-bottom:20px;color:#cbd5e1">${this.data.description}</p>` : ""}
+              <div class="section">
+                <div class="section-title">Permissions Required</div>
+                <div class="permissions">
+                  ${this.data.permissions.map(p => `<span class="permission-badge">${p}</span>`).join("")}
+                </div>
+              </div>
+              ${this.renderRequestBody()}
+              ${this.renderResponses()}
+            </div>
+          `;
 
-          const header = endpoint.querySelector(".endpoint-header");
-          header.addEventListener("click", () => {
+          endpoint.querySelector(".endpoint-header").addEventListener("click", () => {
             toggleEndpoint(endpoint);
           });
 
@@ -373,153 +484,120 @@
 
         renderRequestBody() {
           if (!this.data.requestBody) {
-            return '<div class="section"><div class="section-title">Request Body</div><p style="color: #64748b; font-style: italic;">No request body required</p></div>';
+            return '<div class="section"><div class="section-title">Request Body</div><p style="color:#64748b;font-style:italic">No request body required</p></div>';
           }
           return `
-                    <div class="section">
-                        <div class="section-title">Request Body</div>
-                        <pre class="code-block">${JSON.stringify(this.data.requestBody, null, 2)}</pre>
-                    </div>
-                `;
+            <div class="section">
+              <div class="section-title">Request Body</div>
+              <pre class="code-block">${JSON.stringify(this.data.requestBody, null, 2)}</pre>
+            </div>
+          `;
         }
 
         renderResponses() {
-          const responseEntries = Object.entries(this.data.responses);
+          if (!this.data.responses) return "";
+          const entries = Object.entries(this.data.responses);
+          const rendered = entries.map(([key, value]) => {
+            const isSuccess = key.toLowerCase().startsWith("success");
+            const typeClass = isSuccess ? "response-success" : "response-error";
+            const label = key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+            return `
+              <div class="response-section">
+                <div class="response-type ${typeClass}">${label} (${value.status})</div>
+                ${value.body
+                  ? `<pre class="code-block">${JSON.stringify(value.body, null, 2)}</pre>`
+                  : `<p style="color:#64748b;font-style:italic;margin-top:8px">No content returned</p>`}
+              </div>
+            `;
+          }).join("");
 
-          const rendered = responseEntries
-            .map(([key, value]) => {
-              const isSuccess = key.toLowerCase().startsWith("success");
-              const typeClass = isSuccess
-                ? "response-success"
-                : "response-error";
-              const label = key
-                .replace(/_/g, " ")
-                .replace(/\b\w/g, (c) => c.toUpperCase());
-
-              return `
-      <div class="response-section">
-        <div class="response-type ${typeClass}">
-          ${label} (${value.status})
-        </div>
-        ${
-          value.body
-            ? `<pre class="code-block">${JSON.stringify(value.body, null, 2)}</pre>`
-            : `<p style="color: #64748b; font-style: italic; margin-top: 8px;">No content returned</p>`
-        }
-      </div>
-    `;
-            })
-            .join("");
-
-          return `
-    <div class="section">
-      <div class="section-title">Responses</div>
-      ${rendered}
-    </div>
-  `;
+          return `<div class="section"><div class="section-title">Responses</div>${rendered}</div>`;
         }
       }
 
-      function renderEndpoints(endpointsToRender) {
+      function renderEndpoints(list) {
         const container = document.getElementById("endpointsContainer");
         const noResults = document.getElementById("noResults");
-
         container.innerHTML = "";
 
-        if (endpointsToRender.length === 0) {
+        if (list.length === 0) {
           container.style.display = "none";
           noResults.style.display = "block";
-
           noResults.textContent = fileLoaded
             ? "No endpoints found matching your search."
             : "Load an API JSON file to list endpoints.";
         } else {
           container.style.display = "block";
           noResults.style.display = "none";
-          endpointsToRender.forEach((data) => {
-            const endpoint = new Endpoint(data);
-            container.appendChild(endpoint.render());
-          });
+          list.forEach(data => container.appendChild(new Endpoint(data).render()));
         }
       }
 
-      function toggleEndpoint(clickedEndpoint) {
-        const allEndpoints = document.querySelectorAll(".endpoint");
-        const isCurrentlyActive = clickedEndpoint.classList.contains("active");
-
-        allEndpoints.forEach((ep) => ep.classList.remove("active"));
-
-        if (!isCurrentlyActive) {
-          clickedEndpoint.classList.add("active");
-        }
+      function toggleEndpoint(clicked) {
+        const isActive = clicked.classList.contains("active");
+        document.querySelectorAll(".endpoint").forEach(ep => ep.classList.remove("active"));
+        if (!isActive) clicked.classList.add("active");
       }
 
       function searchEndpoints(query) {
-        const lowerQuery = query.toLowerCase().trim();
-        if (!lowerQuery) {
-          renderEndpoints(endpoints);
-          return;
-        }
-
-        const filtered = endpoints.filter((endpoint) => {
-          return (
-            endpoint.title.toLowerCase().includes(lowerQuery) ||
-            endpoint.url.toLowerCase().includes(lowerQuery) ||
-            endpoint.method.toLowerCase().includes(lowerQuery) ||
-            (endpoint.description &&
-              endpoint.description.toLowerCase().includes(lowerQuery))
-          );
-        });
-
-        renderEndpoints(filtered);
+        const q = query.toLowerCase().trim();
+        if (!q) { renderEndpoints(endpoints); return; }
+        renderEndpoints(endpoints.filter(e =>
+          e.title.toLowerCase().includes(q) ||
+          e.url.toLowerCase().includes(q) ||
+          e.method.toLowerCase().includes(q) ||
+          (e.description && e.description.toLowerCase().includes(q))
+        ));
       }
 
+      // ── FILE LOADING ──────────────────────────────────────────────
       document.getElementById("loadFileBtn").addEventListener("click", () => {
         document.getElementById("fileInput").click();
       });
 
-      document.getElementById("fileInput").addEventListener("change", (e) => {
+      document.getElementById("fileInput").addEventListener("change", e => {
         const file = e.target.files[0];
         if (!file) return;
 
         const reader = new FileReader();
-
-        reader.onload = function (event) {
+        reader.onload = function(event) {
           try {
             const json = JSON.parse(event.target.result);
 
             document.title = json.title || "API Documentation";
-            document.querySelector("header h1").textContent =
-              json.title || "API Documentation";
+            document.querySelector("header h1").textContent = json.title || "API Documentation";
 
             const baseUrlElem = document.getElementById("base_url");
             if (json.base_url) {
               baseUrlElem.textContent = json.base_url;
-              baseUrlElem.style.display = "inline-block";
-              baseUrlElem.style.background = "#1e293b";
-              baseUrlElem.style.color = "white";
-              baseUrlElem.style.padding = "3px 8px";
-              baseUrlElem.style.borderRadius = "4px";
-              baseUrlElem.style.fontFamily = "'Courier New', monospace";
-              baseUrlElem.style.fontStyle = "normal";
-              baseUrlElem.style.fontSize = "0.85em";
-              baseUrlElem.style.marginTop = "8px";
+              Object.assign(baseUrlElem.style, {
+                display: "inline-block",
+                background: "#1e293b",
+                color: "white",
+                padding: "3px 8px",
+                borderRadius: "4px",
+                fontFamily: "'Courier New', monospace",
+                fontStyle: "normal",
+                fontSize: "0.85em",
+                marginTop: "8px",
+              });
             } else {
               baseUrlElem.style.display = "none";
             }
+
+            renderNotes(json.notes || null);
 
             fileLoaded = true;
             endpoints = json.endpoints || [];
             renderEndpoints(endpoints);
           } catch (err) {
-            alert(err);
+            alert("Failed to parse JSON: " + err.message);
           }
         };
-
         reader.readAsText(file);
       });
 
-      document.getElementById("searchInput").addEventListener("input", (e) => {
+      document.getElementById("searchInput").addEventListener("input", e => {
         searchEndpoints(e.target.value);
       });
 
