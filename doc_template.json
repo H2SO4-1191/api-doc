@@ -1,6 +1,26 @@
 {
   "title": "Example API Documentation",
   "base_url": "https://example.com",
+  "notes": {
+    "authentication": "All authentication is cookie-based using HttpOnly JWT tokens. After a successful OTP verification, two cookies are automatically set on the client: 'access_token' (expires in 60 minutes) and 'refresh_token' (expires in 7 days). You do not need to manually attach these to requests — the browser does it automatically via the cookie header. Always include credentials in your fetch/axios calls (credentials: 'include' for fetch, withCredentials: true for axios).",
+    "csrf": "Django CSRF protection is active. For any non-GET request from a browser, you must include the CSRF token in the X-CSRFToken header. The CSRF cookie is set automatically by Django on the first request. Read it from document.cookie and attach it as a header.",
+    "permission_types": {
+      "AllowAny": "No authentication required. Anyone can call this endpoint.",
+      "IsAuthenticated": "Requires a valid access_token cookie. The user must be a fully approved member (has logged in at least once via OTP).",
+      "IsPrivileged": "Requires the user to be either a staff member (is_staff=true) OR a moderator of any department.",
+      "IsAdminUser": "Requires is_staff=true. Only full admins/staff can access this.",
+      "IsSuperUser": "Requires is_superuser=true. The highest privilege level, reserved for system-level operations."
+    },
+    "user_types": {
+      "unregistered": "A person who has not signed up yet. They cannot log in.",
+      "pending": "A member who has signed up but has not yet been approved by a moderator. They cannot log in.",
+      "approved": "A member who has been accepted by a moderator. They can log in via OTP.",
+      "moderator": "A member who is a moderator of at least one department. They have elevated privileges to manage posts and achievements for their department(s). Could be either head ('P') or second-in-command ('S').",
+      "staff": "A member with is_staff=true. They have full admin access. Only one exits in the system."
+    },
+    "pagination": "Cursor-based pagination is used on list endpoints. The response includes 'next' and 'previous' cursor URLs. Pass the cursor value via ?cursor=<value> to navigate pages.",
+    "image_uploads": "All image uploads must be sent as multipart/form-data. Images are validated for size (max 5MB) and checked against an NSFW filter."
+  },
   "endpoints": [
     {
       "title": "Get All Users",
